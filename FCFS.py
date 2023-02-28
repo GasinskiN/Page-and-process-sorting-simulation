@@ -1,4 +1,4 @@
-# Funkcja sprawdza czy w danym momencie przychodza jakieś procesy jesli tak wrzuca je do kolejki
+# Function checks if there are any processes coming at this time and if so it adds them to the queue
 def queue_add(counter_low, counter_high, q, data_array):
     for x in range(counter_low, counter_high):
         for i in data_array:
@@ -9,8 +9,8 @@ def queue_add(counter_low, counter_high, q, data_array):
     return q
 
 
-# funkcja obliczajaca czas spedzony w kolejce danego procesu oraz zapisuje dane procesów do odpowiednich list aby
-# wszystkie dane były w tej samej kolejności zwraca czas spędzony na procesowaniu aby dodać go do licznika czasu
+# function calculates the time spent in queue by a process, saves all the data to appropriate lists, so they
+# are all in the same order. It returns time spent on processing.
 def calculate_time_spent_in_queue(counter, queue_of_processes_and_their_times, index_for_queue):
     processes_list.append(queue_of_processes_and_their_times[index_for_queue])
     list_of_arrival_time.append(queue_of_processes_and_their_times[index_for_queue + 1])
@@ -20,15 +20,14 @@ def calculate_time_spent_in_queue(counter, queue_of_processes_and_their_times, i
     return time_spent_on_processing
 
 
-# Inicjalizujemy globalne zmienne
 time_spent_in_queue = []
 processes_list = []
 list_of_processing_times = []
 list_of_arrival_time = []
 
 
+# Basically our main loop returns average time spent in queue and an array with how the processes were handled
 def fcfs_main(data, number_of_items):
-    # inicjalizacja zmiennych
     index_for_queue = 0
     time_counter = 0
     counter_min = 0
@@ -36,14 +35,14 @@ def fcfs_main(data, number_of_items):
     sum_of_time_spent_in_queue = 0
     while index_for_queue < number_of_items * 3:
 
-        # Dodajemy procesy do kolejki
+        # Add processes to queue
         queue_of_processes_and_their_times = queue_add(counter_min, time_counter,
                                                        queue_of_processes_and_their_times, data)
 
-        # ustalamy wartosc licznika przed dodaniem czasu trwania procesu ponieważ do funkcji doodawania procesow
-        # do kolejki potrzebne nam sa obie wartosci
+        # Keeping track of time before adding the duration of the process because we need to iterate over the
+        # time in order to sort the coming processes appropriately
         counter_min = time_counter
-        # Obliczamy ile czasu dany proces spędził w kolejce i iterujemy indeks dla kolejki
+        # Calculate time spent in queue and iterate index for our queue
         try:
             time_counter += calculate_time_spent_in_queue(time_counter, queue_of_processes_and_their_times,
                                                           index_for_queue)
@@ -51,16 +50,15 @@ def fcfs_main(data, number_of_items):
         except IndexError:
             pass
 
-        # Zwiększamy licznik czasu
+        # Iterate the time counter
         time_counter += 1
-
-    # Obliczamy ile proces średnio czasu spędza w kolejce
+    # Calculate average time spent in queue
     for element in time_spent_in_queue:
         sum_of_time_spent_in_queue += element
 
     average_time_spent_in_queue = sum_of_time_spent_in_queue / len(time_spent_in_queue)
 
-    # Formatujemy dane aby łatwiej je było wpisać do tabelek
+    # Format the data for easier handling
     data_for_storing = [[0] * 4 for i in range(len(list_of_arrival_time))]
 
     for index in range(len(data_for_storing)):
