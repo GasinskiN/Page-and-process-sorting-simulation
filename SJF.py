@@ -1,6 +1,6 @@
-# Funkcja sprawdza czy w danym momencie przychodza jakieś procesy jesli tak wrzuca je do kolejki
-def queue_add(counter_low, counter_high, q, data_arrray):
-    for i in data_arrray:
+# Function checks if there are any processes coming at this time and if so it adds them to the queue
+def queue_add(counter_low, counter_high, q, data_array):
+    for i in data_array:
         for x in range(counter_low, counter_high):
             if i[1] == x:
                 q.append(i[0])
@@ -9,9 +9,9 @@ def queue_add(counter_low, counter_high, q, data_arrray):
     return q
 
 
-# funkcja obliczajaca czas spedzony w kolejce danego procesu oraz zapisuje dane procesów do odpowiednich list aby
-# wszystkie dane były w tej samej kolejności, usuwa z kolejki proces który już rozpatrzyliśmy
-# zwraca czas spędzony na procesowaniu aby dodać go do licznika czasu
+# function calculates the time spent in queue by a process, saves all the data to appropriate lists, so they
+# are all in the same order. Deletes the processes that we have already finished processing from the queue.
+# It returns time spent on processing.
 def calculate_time_spent_in_queue(counter, queue_of_processes_and_their_times, index_of_lowest_processing_time):
     processes_list.append(queue_of_processes_and_their_times[index_of_lowest_processing_time])
     list_of_arrival_time.append(queue_of_processes_and_their_times[index_of_lowest_processing_time + 1])
@@ -24,13 +24,13 @@ def calculate_time_spent_in_queue(counter, queue_of_processes_and_their_times, i
     return time_spent_on_processing
 
 
-# Inicjalizujemy zmienne globalne
 time_spent_in_queue = []
 processes_list = []
 list_of_processing_times = []
 list_of_arrival_time = []
 
 
+# Basically our main loop
 def sjf_main(data_array, number_of_items):
     time_counter = 0
     queue_of_processes_and_their_times = []
@@ -40,21 +40,20 @@ def sjf_main(data_array, number_of_items):
     sum_of_time_spent_in_queue = 0
     while time_for_while_loop_to_end < number_of_items:
 
-        # Dodajemy procesy do kolejki
+        # Add processes to the queue
         queue_of_processes_and_their_times = queue_add(counter_min, time_counter,
                                                        queue_of_processes_and_their_times, data_array)
 
-        # ustalamy wartosc licznika przed dodaniem czasu trwania procesu ponieważ do funkcji doodawania procesow
-        # do kolejki potrzebne nam sa obie wartosci
+        # Keeping track of time before adding the duration of the process because we need to iterate over the
+        # time in order to sort the coming processes appropriately
         counter_min = time_counter
 
         try:
-            # Ustalamy najniższy czas na nieskończoność
+            # Set lowest time to the highest possible number
             lowest_processing_time = float("inf")
-            # Przechodzimy przez kolejkę procesów i sprawdzamy który
-            # ma najkrótszy czas wykonywania pobieramy indeks tego
-            # procesu, wywołujemy funkcje do obliczania czasu spędzonego w kolejce i usuwania tego procesu z kolejki
-            # Inkrementujemy czas do którego pętla ma się skończyć bo będą wykonane wszystkie procesy
+            # Get index of a process with the lowest processing time from the queue,
+            # then we calculate time spent in queue, we get rid of that process from the queue and
+            # increment the time for the while loop to end
             for j in range(0, len(queue_of_processes_and_their_times), 3):
                 if lowest_processing_time > queue_of_processes_and_their_times[j+2]:
                     lowest_processing_time = queue_of_processes_and_their_times[j+2]
@@ -64,17 +63,15 @@ def sjf_main(data_array, number_of_items):
             time_for_while_loop_to_end += 1
         except IndexError:
             pass
-
-        # Zwiększamy licznik czasu
         time_counter += 1
 
-    # Obliczamy ile proces średnio czasu spędza w kolejce
+    # Calculate average time spent in queue
     for element in time_spent_in_queue:
         sum_of_time_spent_in_queue += element
 
     average_time_spent_in_queue = sum_of_time_spent_in_queue/len(time_spent_in_queue)
 
-    # Formatujemy dane aby łatwiej je było wpisać do tabelek
+    # Format the data for easier processing
     data_for_storing = [[0] * 4 for i in range(len(list_of_arrival_time))]
 
     for index in range(len(data_for_storing)):
