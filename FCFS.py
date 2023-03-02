@@ -26,7 +26,7 @@ list_of_processing_times = []
 list_of_arrival_time = []
 
 
-# Basically our main loop returns average time spent in queue and an array with how the processes were handled
+# Basically our main loop, returns average time spent in queue and an array with data for storing
 def fcfs_main(data, number_of_items):
     index_for_queue = 0
     time_counter = 0
@@ -49,9 +49,8 @@ def fcfs_main(data, number_of_items):
             index_for_queue += 3
         except IndexError:
             pass
-
-        # Iterate the time counter
         time_counter += 1
+
     # Calculate average time spent in queue
     for element in time_spent_in_queue:
         sum_of_time_spent_in_queue += element

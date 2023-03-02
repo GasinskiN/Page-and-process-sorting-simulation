@@ -17,8 +17,8 @@ while len(pages) < number_of_items:
         pages.append(temp)
 pages = random.randint(10, size=number_of_items)
 # normal distribution of time of arrival and duration (not a real normal distribution,
-# negative numbers are converted to positive, and there is a 1 added to the duration of
-# processes so we always have a duration)
+# negative numbers are converted to non-negative, and there is a 1 added to the duration of
+# processes so the duration is always a positive number)
 arriving_time = abs(random.normal(loc=mean_arriving_time, scale=std_arriving_time, size=number_of_items))
 execution_time = abs(random.normal(loc=mean_execution_time, scale=std_execution_time, size=number_of_items))
 arriving_time = arriving_time.round()
